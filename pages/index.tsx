@@ -4,6 +4,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { RandomFox } from "../components/RandomFox";
+import type { MouseEvent } from "react";
 import { useState } from "react";
 
 function generateRandomNumber(): number {
@@ -17,29 +18,12 @@ function generateRandomUUID(): string {
 type ImageTypeProps = { id: string; url: string };
 
 const Home: NextPage = () => {
-  const [imagesUrls, setimagesUrls] = useState<Array<ImageTypeProps>>([
-    {
-      id: generateRandomUUID(),
-      url: `https://randomfox.ca/images/${generateRandomNumber()}.jpg`,
-    },
-    {
-      id: generateRandomUUID(),
-      url: `https://randomfox.ca/images/${generateRandomNumber()}.jpg`,
-    },
-    {
-      id: generateRandomUUID(),
-      url: `https://randomfox.ca/images/${generateRandomNumber()}.jpg`,
-    },
-    {
-      id: generateRandomUUID(),
-      url: `https://randomfox.ca/images/${generateRandomNumber()}.jpg`,
-    },
-  ]);
+  const [imagesUrls, setimagesUrls] = useState<Array<ImageTypeProps>>([]);
 
-function addFoxImage() {
+function addFoxImage(event: MouseEvent<HTMLButtonElement>) {
     const newImage = {
       id: generateRandomUUID(),
-      url: generateRandomNumber(),
+      url: `https://randomfox.ca/images/${generateRandomNumber()}.jpg`,
     };
 
     setimagesUrls([...imagesUrls, newImage]);
@@ -56,6 +40,7 @@ function addFoxImage() {
 
       <main className={styles.main}>
         <h1 className="text-3xl font-bold underline">Hola mundo!</h1>
+        <button onClick={addFoxImage}>Agregar Imagen</button>
         {imagesUrls.map(({ id, url }) => (
           <div key={id}>
             <RandomFox imageUrl={url} />
