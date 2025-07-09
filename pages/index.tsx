@@ -3,9 +3,9 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { RandomFox } from "../components/RandomFox";
+import { LazyImage } from "../components/LazyImage";
 import type { MouseEvent } from "react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 function generateRandomNumber(): number {
   return Math.floor(Math.random() * 123) + 1;
@@ -15,20 +15,23 @@ function generateRandomUUID(): string {
   return Math.random().toString(36).substr(2, 9);
 }
 
-type ImageTypeProps = { id: string; url: string };
+type Imagetype = { id: string; src: string };
 
 const Home: NextPage = () => {
-  const [imagesUrls, setimagesUrls] = useState<Array<ImageTypeProps>>([]);
+  const [imagesUrls, setimagesUrls] = useState<Array<Imagetype>>([]);
 
-function addFoxImage(event: MouseEvent<HTMLButtonElement>) {
+  function addFoxImage(event: MouseEvent<HTMLButtonElement>): void {
     const newImage = {
       id: generateRandomUUID(),
-      url: `https://randomfox.ca/images/${generateRandomNumber()}.jpg`,
+      src: `https://randomfox.ca/images/${generateRandomNumber()}.jpg`,
     };
 
     setimagesUrls([...imagesUrls, newImage]);
   }
 
+  const onLazyFunction = useCallback(() => {
+    console.log("AUU");
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -41,9 +44,13 @@ function addFoxImage(event: MouseEvent<HTMLButtonElement>) {
       <main className={styles.main}>
         <h1 className="text-3xl font-bold underline">Hola mundo!</h1>
         <button onClick={addFoxImage}>Agregar Imagen</button>
-        {imagesUrls.map(({ id, url }) => (
+        {imagesUrls.map(({ id, src }) => (
           <div key={id}>
-            <RandomFox imageUrl={url} />
+            <LazyImage
+              srcProp={src}
+              onClick={() => console.log("Hey")}
+              onLazyLoading={() => onLazyFunction()}
+            />
           </div>
         ))}
       </main>
